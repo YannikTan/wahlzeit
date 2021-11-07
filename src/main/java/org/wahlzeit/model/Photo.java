@@ -45,7 +45,7 @@ public class Photo extends DataObject {
 	/**
 	 * 
 	 */
-	public Location location = null;
+	protected Location location = null;
 
 	/**
 	 * 
@@ -127,7 +127,23 @@ public class Photo extends DataObject {
 	public String getIdAsString() {
 		return String.valueOf(id.asInt());
 	}
+
+	/**
+	 * 
+	 * @methodtype get
+	 */
+	public Location getLocation() {
+		return this.location;
+	}
 	
+	/**
+	 * 
+	 * @methodtype set
+	 */
+	public void setLocation(Location location) {
+		this.location = location;
+	}
+
 	/**
 	 * 
 	 */
