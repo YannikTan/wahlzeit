@@ -13,7 +13,8 @@ public class FoodPhotoManagerTest {
 
     @Test
 	public void testCreateInstance() {
-		FoodPhotoManager foodPhotoManager = FoodPhotoManager.getInstance();
+        FoodPhotoManager.initialize();
+		FoodPhotoManager foodPhotoManager = (FoodPhotoManager) PhotoManager.getInstance();
         
         assertNotNull(foodPhotoManager);
         assert foodPhotoManager instanceof PhotoManager;
@@ -21,8 +22,9 @@ public class FoodPhotoManagerTest {
     
     @Test
 	public void testGetInstanceReturnsSingleton() {
-		FoodPhotoManager foodPhotoManager = FoodPhotoManager.getInstance();
-        FoodPhotoManager fPM2 = foodPhotoManager.getInstance();
+        FoodPhotoManager.initialize();
+		FoodPhotoManager foodPhotoManager = (FoodPhotoManager) PhotoManager.getInstance();
+        FoodPhotoManager fPM2 = (FoodPhotoManager) PhotoManager.getInstance();
         
         assertEquals(fPM2, foodPhotoManager);
 	}

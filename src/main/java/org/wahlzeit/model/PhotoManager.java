@@ -20,7 +20,7 @@ public class PhotoManager extends ObjectManager {
 	/**
 	 * 
 	 */
-	protected static final PhotoManager instance = new PhotoManager();
+	protected static PhotoManager instance = new PhotoManager();
 
 	/**
 	 * In-memory cache for photos
@@ -42,28 +42,28 @@ public class PhotoManager extends ObjectManager {
 	/**
 	 * 
 	 */
-	public static final boolean hasPhoto(String id) {
+	public static boolean hasPhoto(String id) {
 		return hasPhoto(PhotoId.getIdFromString(id));
 	}
 	
 	/**
 	 * 
 	 */
-	public static final boolean hasPhoto(PhotoId id) {
+	public static boolean hasPhoto(PhotoId id) {
 		return getPhoto(id) != null;
 	}
 	
 	/**
 	 * 
 	 */
-	public static final Photo getPhoto(String id) {
+	public static Photo getPhoto(String id) {
 		return getPhoto(PhotoId.getIdFromString(id));
 	}
 	
 	/**
 	 * 
 	 */
-	public static final Photo getPhoto(PhotoId id) {
+	public static Photo getPhoto(PhotoId id) {
 		return instance.getPhotoFromId(id);
 	}
 	

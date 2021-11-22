@@ -9,10 +9,7 @@ import org.wahlzeit.services.*;
  */
 public class FoodPhotoFactory extends PhotoFactory{
 	
-	/**
-	 * Hidden singleton instance; needs to be initialized from the outside.
-	 */
-	private static FoodPhotoFactory instance = null;
+	private static Boolean isInitialized = false;
 	
     private FoodPhotoFactory() {
 		// do nothing
@@ -22,23 +19,24 @@ public class FoodPhotoFactory extends PhotoFactory{
 	 * Public singleton access method.
 	 */
 	public static synchronized FoodPhotoFactory getInstance() {
-		if (instance == null) {
+		if (!isInitialized) {
 			SysLog.logSysInfo("setting FoodPhotoFactory");
-			setInstance(new FoodPhotoFactory());
+			PhotoFactory.setInstance(new FoodPhotoFactory()); //use PhotoFactory to store instance
+			isInitialized = true;
 		}
 		
-		return instance;
+		return (FoodPhotoFactory) PhotoFactory.getInstance();
 	}
 	
 	/**
 	 * Method to set the singleton instance of PhotoFactory.
 	 */
 	protected static synchronized void setInstance(FoodPhotoFactory FoodPhotoFactory) {
-		if (instance != null) {
+		if (isInitialized) {
 			throw new IllegalStateException("attempt to initialize FoodPhotoFactory twice");
 		}
 		
-		instance = FoodPhotoFactory;
+		PhotoFactory.setInstance(FoodPhotoFactory);
 	}
 	
 	/**
