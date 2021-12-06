@@ -45,7 +45,6 @@ public class CoordinateTest {
 	public void testCoordinateShouldNotBeEqual() {
 		CartesianCoordinate coordinate = new CartesianCoordinate(1, 2, 3);
 
-        assertFalse(coordinate.isEqual(null));
         assertFalse(coordinate.isEqual(new CartesianCoordinate(2, 2, 2)));
         assertFalse(coordinate.isEqual(new CartesianCoordinate(1, 2, 2)));
         assertFalse(coordinate.isEqual(new CartesianCoordinate(2, 2, 3)));
