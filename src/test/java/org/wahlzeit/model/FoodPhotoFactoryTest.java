@@ -10,19 +10,6 @@ import java.lang.reflect.*;
  * Test cases for the FoodPhotoFactory class.
  */
 public class FoodPhotoFactoryTest {
-
-    @Test
-	public void testCreateInstance() {
-        FoodPhotoFactory foodPhotoFactory = null;
-        try {
-            foodPhotoFactory = FoodPhotoFactory.getInstance();    
-        } catch (IllegalStateException e) {
-            
-        }
-        
-        assertNotNull(foodPhotoFactory);
-        assert foodPhotoFactory instanceof PhotoFactory;
-	}
     
     @Test
 	public void testReturnsSingleton() {
