@@ -10,9 +10,8 @@ public abstract class AbstractCoordinate implements Coordinate{
 	 * @methodtype get
 	 */
     public double getCartesianDistance(Coordinate coordinate){
-        if(coordinate == null){
-            throw new NullPointerException("Given coordinate may not be null");
-        }
+        assertClassInvariants();
+        assertObjectNotNull(coordinate);
         CartesianCoordinate currentAsCartesian = this.asCartesianCoordinate();
         CartesianCoordinate otherAsCartesian = coordinate.asCartesianCoordinate();
         double distance = Math.sqrt(
@@ -20,9 +19,8 @@ public abstract class AbstractCoordinate implements Coordinate{
             Math.pow(currentAsCartesian.getY() - otherAsCartesian.getY(), 2) +
             Math.pow(currentAsCartesian.getZ() - otherAsCartesian.getZ(), 2)
         );
-        if(Double.isNaN(distance)){
-            throw new NumberFormatException("calculated distance is not a number");
-        }
+        assertValueNotNaN(distance);
+        assertClassInvariants();
         return distance;
     }
 
@@ -31,9 +29,8 @@ public abstract class AbstractCoordinate implements Coordinate{
 	 * @methodtype get
 	 */
     public double getCentralAngle(Coordinate coordinate){
-        if(coordinate == null){
-            throw new NullPointerException("Given coordinate may not be null");
-        }
+        assertClassInvariants();
+        assertObjectNotNull(coordinate);
 		SphericCoordinate thisAsSpheric = this.asSphericCoordinate();
         SphericCoordinate otherAsSpheric = coordinate.asSphericCoordinate();
         
@@ -47,9 +44,8 @@ public abstract class AbstractCoordinate implements Coordinate{
                 Math.cos(phi_1) * Math.cos(phi_2) * Math.cos(delta)
             )
         );
-        if(Double.isNaN(angle)){
-            throw new NumberFormatException("calculated angle is not a number");
-        }
+        assertValueNotNaN(angle);
+        assertClassInvariants();
         return angle;
     }
 
@@ -58,16 +54,15 @@ public abstract class AbstractCoordinate implements Coordinate{
 	 * @methodtype comparison
 	 */
 	public boolean isEqual(Coordinate otherCoordinate){
-		if(otherCoordinate == null){
-			return false;
-		}
+        assertClassInvariants();
+		assertObjectNotNull(otherCoordinate);
         CartesianCoordinate currentAsCartesian = this.asCartesianCoordinate();
         CartesianCoordinate otherAsCartesian = otherCoordinate.asCartesianCoordinate();
         double epsilon = 0.001;
         boolean eqX = Math.abs(otherAsCartesian.getX() - currentAsCartesian.getX()) <= epsilon;
         boolean eqY = Math.abs(otherAsCartesian.getY() - currentAsCartesian.getY()) <= epsilon;
         boolean eqZ = Math.abs(otherAsCartesian.getZ() - currentAsCartesian.getZ()) <= epsilon;
-
+        assertClassInvariants();
 		return eqX && eqY && eqZ;
 	}
 
@@ -90,7 +85,9 @@ public abstract class AbstractCoordinate implements Coordinate{
 
 
     public int hashcode(){
+        assertClassInvariants();
         CartesianCoordinate thisAsCartesian = this.asCartesianCoordinate();
+        assertClassInvariants();
         return Objects.hash(thisAsCartesian.getX(), thisAsCartesian.getY(), thisAsCartesian.getZ());
     }
 
@@ -99,9 +96,32 @@ public abstract class AbstractCoordinate implements Coordinate{
 	 * @methodtype command
 	 */
 	public void writeOn(ResultSet rset) throws SQLException{
+        assertClassInvariants();
         CartesianCoordinate thisAsCartesian = this.asCartesianCoordinate();
 		rset.updateDouble("coordinate_x", thisAsCartesian.getX());
 		rset.updateDouble("coordinate_y", thisAsCartesian.getY());
 		rset.updateDouble("coordinate_z", thisAsCartesian.getZ());
+        assertClassInvariants();
 	}
+
+    /**
+	 * 
+	 * @methodtype assert
+	 */
+    public void assertObjectNotNull(Object o){
+        if(o == null){
+            throw new NullPointerException("Object may not be null");
+        }
+    }
+
+    /**
+	 * 
+	 * @methodtype assert
+	 */
+    public void assertValueNotNaN(double value){
+        if(Double.isNaN(value)){
+            throw new NumberFormatException("Value may not be NaN");
+        }
+    }
+
 }

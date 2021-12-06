@@ -27,6 +27,7 @@ public class CartesianCoordinate extends AbstractCoordinate{
 		this.x = x;
         this.y = y;
         this.z = z;
+		assertClassInvariants();
 	}
 
 	/**
@@ -82,6 +83,7 @@ public class CartesianCoordinate extends AbstractCoordinate{
 	 * @methodtype conversion
 	 */
     public CartesianCoordinate asCartesianCoordinate(){
+		assertClassInvariants();
         return this;
     }
     
@@ -91,6 +93,7 @@ public class CartesianCoordinate extends AbstractCoordinate{
 	 * @methodtype conversion
 	 */
     public SphericCoordinate asSphericCoordinate(){
+		assertClassInvariants();
         double radius = Math.sqrt(Math.pow(x, 2) + Math.pow(y, 2) + Math.pow(z, 2));
 		double phi;
 		if(radius == 0){
@@ -106,7 +109,7 @@ public class CartesianCoordinate extends AbstractCoordinate{
 		}else{
 			theta = Math.PI / 2;
 		}
-		
+		assertClassInvariants();
 		return new SphericCoordinate(phi, theta, radius);
     }
 
@@ -115,9 +118,22 @@ public class CartesianCoordinate extends AbstractCoordinate{
 	 * @methodtype command
 	 */
 	public void readFrom(ResultSet rset) throws SQLException{
+		assertClassInvariants();
 		this.x = rset.getDouble("coordinate_x");
 		this.y = rset.getDouble("coordinate_y");
 		this.z = rset.getDouble("coordinate_z");
+		assertClassInvariants();
+	}
+
+	/**
+	 * 
+	 * @methodtype assert
+	 */
+	@Override
+    public void assertClassInvariants(){
+		if(Double.isNaN(this.x) || Double.isNaN(this.y) || Double.isNaN(this.z)){
+			throw new NumberFormatException("Cartesian Coordinate not valid (NaN)");			
+		}
 	}
 	
 }

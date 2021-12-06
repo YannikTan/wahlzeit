@@ -12,4 +12,5 @@ public interface Coordinate {
     boolean equals(Object object);
     void writeOn(ResultSet rset) throws SQLException;
     void readFrom(ResultSet rset) throws SQLException;
+    void assertClassInvariants();
 }
