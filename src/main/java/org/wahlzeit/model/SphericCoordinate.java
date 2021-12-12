@@ -76,10 +76,12 @@ public class SphericCoordinate extends AbstractCoordinate{
 	 */
     public CartesianCoordinate asCartesianCoordinate(){
 		assertClassInvariants();
-        double x = this.radius * Math.sin(this.phi) * Math.cos(this.theta);
+        
+		double x = this.radius * Math.sin(this.phi) * Math.cos(this.theta);
         double y = this.radius * Math.sin(this.phi) * Math.sin(this.theta);
         double z = this.radius * Math.cos(this.phi);
         CartesianCoordinate cartesianCoord = new CartesianCoordinate(x, y, z);
+		
 		assertClassInvariants();
         return cartesianCoord;
     }
@@ -94,15 +96,17 @@ public class SphericCoordinate extends AbstractCoordinate{
     }
 
 	/**
-	 * 
+	 * set coordinate according to database entries
 	 * @methodtype command
 	 */
 	public void readFrom(ResultSet rset) throws SQLException{
 		assertClassInvariants();
-        double x = rset.getDouble("coordinate_x");
+        // get cartesian coordinate
+		double x = rset.getDouble("coordinate_x");
 		double y = rset.getDouble("coordinate_y");
 		double z = rset.getDouble("coordinate_z");
 
+		//convert to Spheric ccordinate
         SphericCoordinate Spheric = new CartesianCoordinate(x, y, z).asSphericCoordinate();
         this.phi = Spheric.getPhi();
         this.theta = Spheric.getTheta();
@@ -111,7 +115,7 @@ public class SphericCoordinate extends AbstractCoordinate{
 	}
 
 	/**
-	 * 
+	 * Assert that all values are not NaN and radius is not smaller than 0
 	 * @methodtype assert
 	 */
 	@Override

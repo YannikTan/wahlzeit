@@ -94,7 +94,8 @@ public class CartesianCoordinate extends AbstractCoordinate{
 	 */
     public SphericCoordinate asSphericCoordinate(){
 		assertClassInvariants();
-        double radius = Math.sqrt(Math.pow(x, 2) + Math.pow(y, 2) + Math.pow(z, 2));
+        
+		double radius = Math.sqrt(Math.pow(x, 2) + Math.pow(y, 2) + Math.pow(z, 2));
 		double phi;
 		if(radius == 0){
 			return new SphericCoordinate(0, 0, 0); 
@@ -109,12 +110,13 @@ public class CartesianCoordinate extends AbstractCoordinate{
 		}else{
 			theta = Math.PI / 2;
 		}
+		
 		assertClassInvariants();
 		return new SphericCoordinate(phi, theta, radius);
     }
 
 	/**
-	 * 
+	 * set x, y, and z coordinates according to database entries
 	 * @methodtype command
 	 */
 	public void readFrom(ResultSet rset) throws SQLException{
@@ -126,7 +128,7 @@ public class CartesianCoordinate extends AbstractCoordinate{
 	}
 
 	/**
-	 * 
+	 * assert that all values are not NaN
 	 * @methodtype assert
 	 */
 	@Override

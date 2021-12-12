@@ -12,6 +12,8 @@ public abstract class AbstractCoordinate implements Coordinate{
     public double getCartesianDistance(Coordinate coordinate){
         assertClassInvariants();
         assertObjectNotNull(coordinate);
+        
+        //convert coordinates to Cartesian and calculate distance d = sqrt((x_1 - x_2)^2 + (y_1 - y_2)^2 + (z_1 - z_2)^2)
         CartesianCoordinate currentAsCartesian = this.asCartesianCoordinate();
         CartesianCoordinate otherAsCartesian = coordinate.asCartesianCoordinate();
         double distance = Math.sqrt(
@@ -19,6 +21,7 @@ public abstract class AbstractCoordinate implements Coordinate{
             Math.pow(currentAsCartesian.getY() - otherAsCartesian.getY(), 2) +
             Math.pow(currentAsCartesian.getZ() - otherAsCartesian.getZ(), 2)
         );
+        
         assertValueNotNaN(distance);
         if(distance < 0){
             throw new IllegalArgumentException("Distance must not be smaller than 0");
@@ -34,7 +37,8 @@ public abstract class AbstractCoordinate implements Coordinate{
     public double getCentralAngle(Coordinate coordinate){
         assertClassInvariants();
         assertObjectNotNull(coordinate);
-		SphericCoordinate thisAsSpheric = this.asSphericCoordinate();
+		
+        SphericCoordinate thisAsSpheric = this.asSphericCoordinate();
         SphericCoordinate otherAsSpheric = coordinate.asSphericCoordinate();
         
         double phi_1 = otherAsSpheric.getPhi();
@@ -47,6 +51,7 @@ public abstract class AbstractCoordinate implements Coordinate{
                 Math.cos(phi_1) * Math.cos(phi_2) * Math.cos(delta)
             )
         );
+        
         assertValueNotNaN(angle);
         if(angle < 0 || angle > 2*Math.PI){
             throw new IllegalArgumentException("Central angle is not in valid range");
@@ -62,12 +67,15 @@ public abstract class AbstractCoordinate implements Coordinate{
 	public boolean isEqual(Coordinate otherCoordinate){
         assertClassInvariants();
 		assertObjectNotNull(otherCoordinate);
+        
         CartesianCoordinate currentAsCartesian = this.asCartesianCoordinate();
         CartesianCoordinate otherAsCartesian = otherCoordinate.asCartesianCoordinate();
+        
         double epsilon = 0.001;
         boolean eqX = Math.abs(otherAsCartesian.getX() - currentAsCartesian.getX()) <= epsilon;
         boolean eqY = Math.abs(otherAsCartesian.getY() - currentAsCartesian.getY()) <= epsilon;
         boolean eqZ = Math.abs(otherAsCartesian.getZ() - currentAsCartesian.getZ()) <= epsilon;
+        
         assertClassInvariants();
 		return eqX && eqY && eqZ;
 	}
@@ -98,7 +106,7 @@ public abstract class AbstractCoordinate implements Coordinate{
     }
 
     /**
-	 * 
+	 * write coordinate values (as cartesian) to database
 	 * @methodtype command
 	 */
 	public void writeOn(ResultSet rset) throws SQLException{
@@ -111,7 +119,7 @@ public abstract class AbstractCoordinate implements Coordinate{
 	}
 
     /**
-	 * 
+	 * check that Object o is not null
 	 * @methodtype assert
 	 */
     public void assertObjectNotNull(Object o){
@@ -121,7 +129,7 @@ public abstract class AbstractCoordinate implements Coordinate{
     }
 
     /**
-	 * 
+	 * check that value is not NaN
 	 * @methodtype assert
 	 */
     public void assertValueNotNaN(double value){
