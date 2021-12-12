@@ -20,6 +20,9 @@ public abstract class AbstractCoordinate implements Coordinate{
             Math.pow(currentAsCartesian.getZ() - otherAsCartesian.getZ(), 2)
         );
         assertValueNotNaN(distance);
+        if(distance < 0){
+            throw new IllegalArgumentException("Distance must not be smaller than 0");
+        }
         assertClassInvariants();
         return distance;
     }
@@ -45,6 +48,9 @@ public abstract class AbstractCoordinate implements Coordinate{
             )
         );
         assertValueNotNaN(angle);
+        if(angle < 0 || angle > 2*Math.PI){
+            throw new IllegalArgumentException("Central angle is not in valid range");
+        }
         assertClassInvariants();
         return angle;
     }

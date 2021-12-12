@@ -119,6 +119,9 @@ public class SphericCoordinate extends AbstractCoordinate{
 		if(Double.isNaN(this.phi) || Double.isNaN(this.radius) || Double.isNaN(this.theta)){
 			throw new NumberFormatException("Spheric Coordinate not valid (NaN)");			
 		}
+		if(this.radius < 0){
+			throw new IllegalArgumentException("Spheric Coordinate radius not in valid range");			
+		}
 	}
 	
 }
