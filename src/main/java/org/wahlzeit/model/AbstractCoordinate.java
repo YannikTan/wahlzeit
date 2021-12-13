@@ -3,6 +3,8 @@ package org.wahlzeit.model;
 import java.sql.*;
 import java.util.Objects;
 
+import org.wahlzeit.services.*;
+
 public abstract class AbstractCoordinate implements Coordinate{
 
     /**
@@ -11,20 +13,25 @@ public abstract class AbstractCoordinate implements Coordinate{
 	 */
     public double getCartesianDistance(Coordinate coordinate){
         assertClassInvariants();
-        assertObjectNotNull(coordinate);
+        double distance = 0;
+        try{
+            assertObjectNotNull(coordinate);
         
-        //convert coordinates to Cartesian and calculate distance d = sqrt((x_1 - x_2)^2 + (y_1 - y_2)^2 + (z_1 - z_2)^2)
-        CartesianCoordinate currentAsCartesian = this.asCartesianCoordinate();
-        CartesianCoordinate otherAsCartesian = coordinate.asCartesianCoordinate();
-        double distance = Math.sqrt(
-            Math.pow(currentAsCartesian.getX() - otherAsCartesian.getX(), 2) +
-            Math.pow(currentAsCartesian.getY() - otherAsCartesian.getY(), 2) +
-            Math.pow(currentAsCartesian.getZ() - otherAsCartesian.getZ(), 2)
-        );
+            //convert coordinates to Cartesian and calculate distance d = sqrt((x_1 - x_2)^2 + (y_1 - y_2)^2 + (z_1 - z_2)^2)
+            CartesianCoordinate currentAsCartesian = this.asCartesianCoordinate();
+            CartesianCoordinate otherAsCartesian = coordinate.asCartesianCoordinate();
+            distance = Math.sqrt(
+                Math.pow(currentAsCartesian.getX() - otherAsCartesian.getX(), 2) +
+                Math.pow(currentAsCartesian.getY() - otherAsCartesian.getY(), 2) +
+                Math.pow(currentAsCartesian.getZ() - otherAsCartesian.getZ(), 2)
+            );
         
-        assertValueNotNaN(distance);
-        if(distance < 0){
-            throw new IllegalArgumentException("Distance must not be smaller than 0");
+            assertValueNotNaN(distance);
+            if(distance < 0){
+                throw new IllegalArgumentException("Distance must not be smaller than 0");
+            }
+        }catch(RuntimeException e){
+            SysLog.logThrowable(e);
         }
         assertClassInvariants();
         return distance;
@@ -36,25 +43,30 @@ public abstract class AbstractCoordinate implements Coordinate{
 	 */
     public double getCentralAngle(Coordinate coordinate){
         assertClassInvariants();
-        assertObjectNotNull(coordinate);
+        double angle = 0;
+        try{
+            assertObjectNotNull(coordinate);
 		
-        SphericCoordinate thisAsSpheric = this.asSphericCoordinate();
-        SphericCoordinate otherAsSpheric = coordinate.asSphericCoordinate();
+            SphericCoordinate thisAsSpheric = this.asSphericCoordinate();
+            SphericCoordinate otherAsSpheric = coordinate.asSphericCoordinate();
         
-        double phi_1 = otherAsSpheric.getPhi();
-        double phi_2 = thisAsSpheric.getPhi();
-        double delta = Math.abs(otherAsSpheric.getTheta() - thisAsSpheric.getTheta());
+            double phi_1 = otherAsSpheric.getPhi();
+            double phi_2 = thisAsSpheric.getPhi();
+            double delta = Math.abs(otherAsSpheric.getTheta() - thisAsSpheric.getTheta());
 
-        double angle = Math.toDegrees(
-            Math.acos(
-                Math.sin(phi_1) * Math.sin(phi_2) + 
-                Math.cos(phi_1) * Math.cos(phi_2) * Math.cos(delta)
-            )
-        );
+            angle = Math.toDegrees(
+                Math.acos(
+                    Math.sin(phi_1) * Math.sin(phi_2) + 
+                    Math.cos(phi_1) * Math.cos(phi_2) * Math.cos(delta)
+                )
+            );
         
-        assertValueNotNaN(angle);
-        if(angle < 0 || angle > 2*Math.PI){
-            throw new IllegalArgumentException("Central angle is not in valid range");
+            assertValueNotNaN(angle);
+            if(angle < 0 || angle > 2*Math.PI){
+                throw new IllegalArgumentException("Central angle is not in valid range");
+            }
+        }catch(RuntimeException e){
+            SysLog.logThrowable(e);
         }
         assertClassInvariants();
         return angle;
