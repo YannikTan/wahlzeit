@@ -13,7 +13,7 @@ public class PhotoTest {
 	@Test
 	public void testSetLocation() {
 		Photo photo = new Photo();
-        Location location = new Location(new CartesianCoordinate(1, 2, 3));
+        Location location = new Location(CartesianCoordinate.doGetCoordinate(1, 2, 3));
 
         photo.setLocation(location);
         assertEquals(photo.getLocation(), location);

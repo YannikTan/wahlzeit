@@ -1,37 +1,52 @@
 package org.wahlzeit.model;
 
 import java.sql.*;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * A coordinate represents the x,y,z coordinate of a location.
  */
 public class SphericCoordinate extends AbstractCoordinate{
 
-    private double phi;
-    private double theta;
-    private double radius;
+    private final double phi;
+    private final double theta;
+    private final double radius;
+    private static final ConcurrentHashMap<Integer, SphericCoordinate> sphericHashMap = new ConcurrentHashMap<>();
 
 	/**
-	 * 
+	 *
 	 * @methodtype constructor
 	 */
-	public SphericCoordinate(double phi, double theta, double radius) {
+	private SphericCoordinate(final double phi, final double theta, final double radius) {
 		this.phi = phi;
         this.theta = theta;
         this.radius = radius;
 		assertClassInvariants();
 	}
 
+	public static SphericCoordinate doGetCoordinate(final double phi, final double theta, final double radius) {
+        SphericCoordinate coord = new SphericCoordinate(phi, theta, radius);
+        int hash = coord.hashCode();
+        synchronized (sphericHashMap) {
+            if (sphericHashMap.get(hash) == null) {
+            	sphericHashMap.put(hash, coord);
+            }else {
+            	coord = sphericHashMap.get(hash);
+            }
+            return coord;
+        }
+    }
+
 	/**
-	 * 
+	 *
 	 * @methodtype get
 	 */
 	public double getPhi(){
 		return phi;
 	}
-	
+
 	/**
-	 * 
+	 *
 	 * @methodtype get
 	 */
 	public double getTheta(){
@@ -39,35 +54,11 @@ public class SphericCoordinate extends AbstractCoordinate{
 	}
 
 	/**
-	 * 
+	 *
 	 * @methodtype get
 	 */
 	public double getRadius(){
 		return radius;
-	}
-
-	/**
-	 * 
-	 * @methodtype set
-	 */
-	public void setPhi(double phi){
-		this.phi = phi;
-	}
-
-	/**
-	 * 
-	 * @methodtype set
-	 */
-	public void setTheta(double theta){
-		this.theta = theta;
-	}
-
-	/**
-	 * 
-	 * @methodtype set
-	 */
-	public void setRadius(double radius){
-		this.radius = radius;
 	}
 
 	/**
@@ -76,12 +67,12 @@ public class SphericCoordinate extends AbstractCoordinate{
 	 */
     public CartesianCoordinate asCartesianCoordinate(){
 		assertClassInvariants();
-        
-		double x = this.radius * Math.sin(this.phi) * Math.cos(this.theta);
-        double y = this.radius * Math.sin(this.phi) * Math.sin(this.theta);
-        double z = this.radius * Math.cos(this.phi);
-        CartesianCoordinate cartesianCoord = new CartesianCoordinate(x, y, z);
-		
+
+		final double x = this.radius * Math.sin(this.phi) * Math.cos(this.theta);
+        final double y = this.radius * Math.sin(this.phi) * Math.sin(this.theta);
+        final double z = this.radius * Math.cos(this.phi);
+        CartesianCoordinate cartesianCoord = CartesianCoordinate.doGetCoordinate(x, y, z);
+
 		assertClassInvariants();
         return cartesianCoord;
     }
@@ -107,10 +98,11 @@ public class SphericCoordinate extends AbstractCoordinate{
 		double z = rset.getDouble("coordinate_z");
 
 		//convert to Spheric ccordinate
-        SphericCoordinate Spheric = new CartesianCoordinate(x, y, z).asSphericCoordinate();
-        this.phi = Spheric.getPhi();
-        this.theta = Spheric.getTheta();
-        this.radius = Spheric.getRadius();
+        SphericCoordinate Spheric = CartesianCoordinate.doGetCoordinate(x, y, z).asSphericCoordinate();
+        final double phi = Spheric.getPhi();
+        final double theta = Spheric.getTheta();
+        final double radius = Spheric.getRadius();
+		doGetCoordinate(phi, theta, radius);
 		assertClassInvariants();
 	}
 
@@ -121,11 +113,11 @@ public class SphericCoordinate extends AbstractCoordinate{
 	@Override
     public void assertClassInvariants(){
 		if(Double.isNaN(this.phi) || Double.isNaN(this.radius) || Double.isNaN(this.theta)){
-			throw new NumberFormatException("Spheric Coordinate not valid (NaN)");			
+			throw new NumberFormatException("Spheric Coordinate not valid (NaN)");
 		}
 		if(this.radius < 0){
-			throw new IllegalArgumentException("Spheric Coordinate radius not in valid range");			
+			throw new IllegalArgumentException("Spheric Coordinate radius not in valid range");
 		}
 	}
-	
+
 }
