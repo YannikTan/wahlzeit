@@ -7,10 +7,17 @@ package org.wahlzeit.model;
 
 import java.sql.*;
 import java.util.concurrent.ConcurrentHashMap;
+import org.wahlzeit.utils.PatternInstance;
 
 /**
  * A coordinate represents the x,y,z coordinate of a location.
  */
+@PatternInstance(
+	patternName = "Template Method",
+	participants = {
+		"ConcreteClass"
+	}
+)
 public final class CartesianCoordinate extends AbstractCoordinate{
 
     /**

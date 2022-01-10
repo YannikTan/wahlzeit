@@ -4,7 +4,14 @@ import java.sql.*;
 import java.util.Objects;
 
 import org.wahlzeit.services.*;
+import org.wahlzeit.utils.PatternInstance;
 
+@PatternInstance(
+	patternName = "Template Method",
+	participants = {
+		"AbstractClass"
+	}
+)
 public abstract class AbstractCoordinate implements Coordinate{
 
     /**

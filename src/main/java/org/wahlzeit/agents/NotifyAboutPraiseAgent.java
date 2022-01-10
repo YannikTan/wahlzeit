@@ -11,13 +11,19 @@ import java.util.Set;
 import org.wahlzeit.model.*;
 import org.wahlzeit.services.*;
 import org.wahlzeit.services.mailing.*;
-
+import org.wahlzeit.utils.PatternInstance;
 
 /**
  * 
  * @author dirkriehle
  *
  */
+@PatternInstance(
+	patternName = "Observer",
+	participants = {
+		"ConcreteSubject"
+	}
+)
 public class NotifyAboutPraiseAgent extends Agent {
 
 	/**
